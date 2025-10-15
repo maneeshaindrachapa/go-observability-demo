@@ -1,4 +1,5 @@
 # File: Makefile
+SHELL := /bin/bash
 .PHONY: help build run test docker-up docker-down docker-logs clean
 
 help: ## Show this help message
@@ -39,15 +40,37 @@ clean: ## Clean up build artifacts and volumes
 	rm -rf bin/
 	docker-compose down -v
 
-load-test: ## Run a simple load test
-	@echo "Sending 100 requests to the order service..."
-	@for i in $$(seq 1 100); do \
-		curl -X POST http://localhost:8080/orders \
+load-test: ## Run a varied load test (successes, validation errors, high-value orders)
+	@echo "Sending 80 successful orders with varied payloads..."
+	@PRODUCTS=("prod-123" "prod-456" "prod-789" "prod-321"); \
+	AMOUNTS=(29.99 49.50 79.95 129.00 249.99); \
+	for i in $$(seq 1 80); do \
+		product=$${PRODUCTS[$$RANDOM % $${#PRODUCTS[@]}]}; \
+		amount=$${AMOUNTS[$$RANDOM % $${#AMOUNTS[@]}]}; \
+		quantity=$$(( ($$RANDOM % 4) + 1 )); \
+		curl -s -o /dev/null -w "Success $$i: %{http_code}\n" \
+		  -X POST http://localhost:8080/orders \
 		  -H "Content-Type: application/json" \
-		  -d '{"user_id":"user-'$$i'","product_id":"prod-123","quantity":2,"amount":99.99}' \
-		  -s -o /dev/null -w "Request $$i: %{http_code}\n"; \
+		  -d "{\"user_id\":\"user-$${i}\",\"product_id\":\"$${product}\",\"quantity\":$${quantity},\"amount\":$${amount}}"; \
 	done
-	@echo "Done! Check Jaeger UI at http://localhost:16686"
+	@echo ""
+	@echo "⚠️  Triggering 10 validation errors..."
+	@for i in $$(seq 1 10); do \
+		curl -s -o /dev/null -w "Validation $$i: %{http_code}\n" \
+		  -X POST http://localhost:8080/orders \
+		  -H "Content-Type: application/json" \
+		  -d "{\"user_id\":\"\",\"product_id\":\"prod-invalid\",\"quantity\":0,\"amount\":-42.0}"; \
+	done
+	@echo ""
+	@echo "💰 Sending 10 high-value orders to exercise payment metrics..."
+	@for i in $$(seq 1 10); do \
+		curl -s -o /dev/null -w "HighValue $$i: %{http_code}\n" \
+		  -X POST http://localhost:8080/orders \
+		  -H "Content-Type: application/json" \
+		  -d "{\"user_id\":\"vip-$${i}\",\"product_id\":\"prod-vip\",\"quantity\":1,\"amount\":999.99}"; \
+	done
+	@echo ""
+	@echo "Done! Check Grafana at http://localhost:3000 and Jaeger at http://localhost:16686"
 
 sample-request: ## Send a sample order request
 	curl -X POST http://localhost:8080/orders \

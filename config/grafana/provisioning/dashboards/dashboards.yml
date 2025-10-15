@@ -1,0 +1,11 @@
+apiVersion: 1
+
+providers:
+  - name: order-service
+    orgId: 1
+    folder: Order Service
+    type: file
+    allowUiUpdates: true
+    updateIntervalSeconds: 30
+    options:
+      path: /etc/grafana/provisioning/dashboards
