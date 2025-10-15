@@ -6,12 +6,12 @@ A production-ready example of implementing observability in Go microservices usi
 
 ## Features
 
-- ✅ **Distributed Tracing** with OpenTelemetry
-- ✅ **Metrics Collection** with Prometheus-compatible exporters
-- ✅ **Structured Logging** with trace correlation
-- ✅ **Context Propagation** across service boundaries
-- ✅ **Production-Ready Patterns** (sampling, error handling, graceful shutdown)
-- ✅ **Complete Observability Stack** (Jaeger, Prometheus, Grafana)
+- **Distributed Tracing** with OpenTelemetry
+- **Metrics Collection** with Prometheus-compatible exporters
+- **Structured Logging** with trace correlation
+- **Context Propagation** across service boundaries
+- **Production-Ready Patterns** (sampling, error handling, graceful shutdown)
+- **Complete Observability Stack** (Jaeger, Prometheus, Grafana)
 
 ## Architecture
 
