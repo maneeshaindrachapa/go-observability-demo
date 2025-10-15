@@ -10,7 +10,7 @@ RUN go mod download
 COPY . .
 
 # Build the application binary
-RUN CGO_ENABLED=0 GOOS=linux go build -o /app/bin/order-service ./main.go
+RUN CGO_ENABLED=0 GOOS=linux go build -o /app/bin/order-service ./cmd/server/main.go
 
 # Final stage
 FROM alpine:latest
