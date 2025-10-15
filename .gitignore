@@ -1,0 +1,29 @@
+# Binaries
+/order-service
+/bin/
+/out/
+/dist/
+
+# Go build cache
+/.gocache/
+/coverage.out
+
+# Dependency directories
+/vendor/
+
+# IDE/editor artifacts
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+
+# Docker artifacts
+/build/otel-collector/.dockerignore
+/build/prometheus/.dockerignore
+/build/grafana/.dockerignore
+/docker-compose.override.yml
+
