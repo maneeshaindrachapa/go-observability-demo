@@ -141,8 +141,12 @@ make load-test
 │   ├── prometheus.yml
 │   └── grafana/
 │       └── provisioning/
+│           └── alerting
+│           └── dashboards
 ├── docker-compose.yml           # Complete observability stack
 ├── Dockerfile
+├── docker-compose.yml
+├── quickstart.md
 ├── Makefile
 ├── go.mod
 └── README.md
